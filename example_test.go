@@ -7,8 +7,8 @@ import (
 	"os"
 
 	svg "github.com/mrjoshuak/otio-svg"
-	"github.com/mrjoshuak/gotio/opentimelineio"
-	"github.com/mrjoshuak/gotio/opentime"
+	"github.com/Avalanche-io/gotio/opentimelineio"
+	"github.com/Avalanche-io/gotio/opentime"
 )
 
 func ExampleEncoder() {

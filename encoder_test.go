@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mrjoshuak/gotio/opentimelineio"
-	"github.com/mrjoshuak/gotio/opentime"
+	"github.com/Avalanche-io/gotio/opentimelineio"
+	"github.com/Avalanche-io/gotio/opentime"
 )
 
 func TestNewEncoder(t *testing.T) {

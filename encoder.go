@@ -19,8 +19,8 @@ import (
 	"io"
 	"math"
 
-	"github.com/mrjoshuak/gotio/opentimelineio"
-	"github.com/mrjoshuak/gotio/opentime"
+	"github.com/Avalanche-io/gotio/opentimelineio"
+	"github.com/Avalanche-io/gotio/opentime"
 )
 
 // Default dimensions and styling constants.
