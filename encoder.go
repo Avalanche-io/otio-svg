@@ -19,7 +19,7 @@ import (
 	"io"
 	"math"
 
-	"github.com/Avalanche-io/gotio/opentimelineio"
+	"github.com/Avalanche-io/gotio"
 	"github.com/Avalanche-io/gotio/opentime"
 )
 
@@ -75,7 +75,7 @@ func (e *Encoder) SetSize(width, height int) {
 }
 
 // Encode encodes a timeline to SVG.
-func (e *Encoder) Encode(t *opentimelineio.Timeline) error {
+func (e *Encoder) Encode(t *gotio.Timeline) error {
 	if t == nil {
 		return fmt.Errorf("timeline is nil")
 	}
@@ -141,7 +141,7 @@ func (e *Encoder) Encode(t *opentimelineio.Timeline) error {
 	}
 
 	for i, child := range allTracks {
-		track, ok := child.(*opentimelineio.Track)
+		track, ok := child.(*gotio.Track)
 		if !ok {
 			continue
 		}
@@ -239,7 +239,7 @@ func (e *Encoder) drawTimeRuler(builder *SVGBuilder, duration opentime.RationalT
 }
 
 // drawTrack draws a single track.
-func (e *Encoder) drawTrack(builder *SVGBuilder, track *opentimelineio.Track, yOffset, height, timeScale float64) error {
+func (e *Encoder) drawTrack(builder *SVGBuilder, track *gotio.Track, yOffset, height, timeScale float64) error {
 	trackID := fmt.Sprintf("track-%s", sanitizeID(track.Name()))
 	if err := builder.StartGroup(trackID, "track"); err != nil {
 		return err
@@ -247,7 +247,7 @@ func (e *Encoder) drawTrack(builder *SVGBuilder, track *opentimelineio.Track, yO
 
 	// Draw track background
 	trackColor := VideoTrackColor
-	if track.Kind() == opentimelineio.TrackKindAudio {
+	if track.Kind() == gotio.TrackKindAudio {
 		trackColor = AudioTrackColor
 	}
 
@@ -277,7 +277,7 @@ func (e *Encoder) drawTrack(builder *SVGBuilder, track *opentimelineio.Track, yO
 		durSeconds := dur.ToSeconds()
 
 		switch item := child.(type) {
-		case *opentimelineio.Clip:
+		case *gotio.Clip:
 			x := float64(MarginLeft) + currentTime*timeScale
 			width := math.Max(durSeconds*timeScale, MinClipWidth)
 			if err := e.drawClip(builder, item, x, yOffset, width, height, trackColor); err != nil {
@@ -287,7 +287,7 @@ func (e *Encoder) drawTrack(builder *SVGBuilder, track *opentimelineio.Track, yO
 				currentTime += durSeconds
 			}
 
-		case *opentimelineio.Gap:
+		case *gotio.Gap:
 			x := float64(MarginLeft) + currentTime*timeScale
 			width := math.Max(durSeconds*timeScale, MinClipWidth)
 			if err := e.drawGap(builder, item, x, yOffset, width, height); err != nil {
@@ -297,7 +297,7 @@ func (e *Encoder) drawTrack(builder *SVGBuilder, track *opentimelineio.Track, yO
 				currentTime += durSeconds
 			}
 
-		case *opentimelineio.Transition:
+		case *gotio.Transition:
 			x := float64(MarginLeft) + currentTime*timeScale
 			width := math.Max(durSeconds*timeScale, MinClipWidth)
 			if err := e.drawTransition(builder, item, x, yOffset, width, height); err != nil {
@@ -311,7 +311,7 @@ func (e *Encoder) drawTrack(builder *SVGBuilder, track *opentimelineio.Track, yO
 }
 
 // drawClip draws a clip.
-func (e *Encoder) drawClip(builder *SVGBuilder, clip *opentimelineio.Clip, x, y, width, height float64, trackColor string) error {
+func (e *Encoder) drawClip(builder *SVGBuilder, clip *gotio.Clip, x, y, width, height float64, trackColor string) error {
 	clipID := fmt.Sprintf("clip-%s", sanitizeID(clip.Name()))
 
 	// Adjust clip rectangle to have some padding
@@ -341,7 +341,7 @@ func (e *Encoder) drawClip(builder *SVGBuilder, clip *opentimelineio.Clip, x, y,
 }
 
 // drawGap draws a gap.
-func (e *Encoder) drawGap(builder *SVGBuilder, gap *opentimelineio.Gap, x, y, width, height float64) error {
+func (e *Encoder) drawGap(builder *SVGBuilder, gap *gotio.Gap, x, y, width, height float64) error {
 	gapID := fmt.Sprintf("gap-%p", gap)
 
 	padding := 2.0
@@ -353,7 +353,7 @@ func (e *Encoder) drawGap(builder *SVGBuilder, gap *opentimelineio.Gap, x, y, wi
 }
 
 // drawTransition draws a transition as a diagonal line.
-func (e *Encoder) drawTransition(builder *SVGBuilder, transition *opentimelineio.Transition, x, y, width, height float64) error {
+func (e *Encoder) drawTransition(builder *SVGBuilder, transition *gotio.Transition, x, y, width, height float64) error {
 	padding := 2.0
 	transY := y + padding
 	transHeight := height - 2*padding
